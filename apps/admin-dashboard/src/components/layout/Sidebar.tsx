@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Drawer,
@@ -47,6 +47,32 @@ export const Sidebar: React.FC = () => {
   const [ipv4Open, setIpv4Open] = useState<boolean>(false);
   const [ipv6Open, setIpv6Open] = useState<boolean>(false);
 
+  // Automatically keep parent menus open when an active sub-module is selected
+  useEffect(() => {
+    if (activeModule.startsWith('inventory')) {
+      setInventoryOpen(true);
+      if (['inventory-suppliers', 'inventory-vendors', 'inventory-supplier-invoices'].includes(activeModule)) {
+        setSupplyOpen(true);
+      }
+    } else if (activeModule.startsWith('networking')) {
+      setNetworkingOpen(true);
+    } else if (activeModule === 'customers') {
+      setCustomersOpen(true);
+    } else if (activeModule === 'finance') {
+      setFinanceOpen(true);
+    }
+  }, [activeModule]);
+
+  const isNavActive = (id: string) => {
+    if (activeModule === id) return true;
+    if (id === 'networking' && activeModule.startsWith('networking')) return true;
+    if (id === 'inventory' && activeModule.startsWith('inventory')) return true;
+    if (id === 'config' && (activeModule === 'config' || activeModule === 'site-customization' || activeModule === 'company-information')) return true;
+    if (id === 'customers' && activeModule.startsWith('customers')) return true;
+    if (id === 'finance' && activeModule.startsWith('finance')) return true;
+    return false;
+  };
+
   const drawerWidth = isSidebarCollapsed ? 76 : 280;
 
   const renderNavItem = (
@@ -57,7 +83,7 @@ export const Sidebar: React.FC = () => {
     isOpen?: boolean,
     onToggle?: () => void
   ) => {
-    const isActive = activeModule === id;
+    const isActive = isNavActive(id);
 
     const navContent = (
       <ListItem disablePadding key={id} sx={{ mb: 0.3 }}>
@@ -76,16 +102,16 @@ export const Sidebar: React.FC = () => {
             py: 0.75,
             justifyContent: isSidebarCollapsed ? 'center' : 'flex-start',
             color: isActive ? 'primary.main' : 'text.secondary',
-            bgcolor: isActive ? 'action.selected' : 'transparent',
+            bgcolor: isActive ? (theme) => theme.palette.mode === 'dark' ? 'rgba(37, 99, 235, 0.15)' : 'rgba(37, 99, 235, 0.08)' : 'transparent',
             position: 'relative',
             '&:hover': {
-              bgcolor: isActive ? 'action.selected' : 'action.hover',
+              bgcolor: isActive ? (theme) => theme.palette.mode === 'dark' ? 'rgba(37, 99, 235, 0.2)' : 'rgba(37, 99, 235, 0.12)' : 'action.hover',
               color: isActive ? 'primary.main' : 'text.primary',
             },
             '&.Mui-selected': {
-              bgcolor: isActive ? 'action.selected' : 'transparent',
+              bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(37, 99, 235, 0.15)' : 'rgba(37, 99, 235, 0.08)',
               '&:hover': {
-                bgcolor: 'action.selected',
+                bgcolor: (theme) => theme.palette.mode === 'dark' ? 'rgba(37, 99, 235, 0.2)' : 'rgba(37, 99, 235, 0.12)',
               },
             },
           }}
@@ -112,9 +138,9 @@ export const Sidebar: React.FC = () => {
 
           {!isSidebarCollapsed && hasChevron && (
             isOpen ? (
-              <ChevronUpIcon sx={{ fontSize: 18, color: 'text.secondary', opacity: 0.7 }} />
+              <ChevronUpIcon sx={{ fontSize: 18, color: isActive ? 'primary.main' : 'text.secondary', opacity: 0.8 }} />
             ) : (
-              <ChevronDownIcon sx={{ fontSize: 18, color: 'text.secondary', opacity: 0.7 }} />
+              <ChevronDownIcon sx={{ fontSize: 18, color: isActive ? 'primary.main' : 'text.secondary', opacity: 0.8 }} />
             )
           )}
 
@@ -125,7 +151,7 @@ export const Sidebar: React.FC = () => {
                 right: 0,
                 top: 8,
                 bottom: 8,
-                width: 4,
+                width: 3.5,
                 bgcolor: 'primary.main',
                 borderTopLeftRadius: 4,
                 borderBottomLeftRadius: 4,
@@ -151,7 +177,8 @@ export const Sidebar: React.FC = () => {
     label: string,
     onClickHandler: () => void,
     hasChevron: boolean = false,
-    isSubOpen?: boolean
+    isSubOpen?: boolean,
+    isActive: boolean = false
   ) => {
     if (isSidebarCollapsed) return null;
 
@@ -161,27 +188,36 @@ export const Sidebar: React.FC = () => {
           onClick={onClickHandler}
           sx={{
             borderRadius: 1.5,
-            pl: 7,
+            pl: 6.5,
             pr: 2,
-            py: 0.6,
-            color: 'text.primary',
+            py: 0.5,
+            color: isActive ? 'primary.main' : 'text.secondary',
+            bgcolor: 'transparent',
             '&:hover': {
               bgcolor: 'action.hover',
+              color: isActive ? 'primary.main' : 'text.primary',
             },
           }}
         >
           <ListItemText
             primary={
-              <Typography sx={{ fontSize: '0.8125rem', fontWeight: isSubOpen ? 600 : 400, color: 'text.primary' }}>
+              <Typography
+                sx={{
+                  fontSize: '0.8125rem',
+                  fontWeight: isActive ? 700 : isSubOpen ? 600 : 400,
+                  color: isActive ? 'primary.main' : 'text.secondary',
+                  letterSpacing: isActive ? '-0.005em' : 'normal',
+                }}
+              >
                 {label}
               </Typography>
             }
           />
           {hasChevron && (
             isSubOpen ? (
-              <ChevronUpIcon sx={{ fontSize: 16, color: 'text.secondary', opacity: 0.7 }} />
+              <ChevronUpIcon sx={{ fontSize: 16, color: isActive ? 'primary.main' : 'text.secondary', opacity: 0.8 }} />
             ) : (
-              <ChevronDownIcon sx={{ fontSize: 16, color: 'text.secondary', opacity: 0.7 }} />
+              <ChevronDownIcon sx={{ fontSize: 16, color: isActive ? 'primary.main' : 'text.secondary', opacity: 0.8 }} />
             )
           )}
         </ListItemButton>
@@ -189,7 +225,7 @@ export const Sidebar: React.FC = () => {
     );
   };
 
-  const renderNestedSubItem = (label: string, onClickHandler: () => void) => {
+  const renderNestedSubItem = (label: string, onClickHandler: () => void, isActive: boolean = false) => {
     if (isSidebarCollapsed) return null;
 
     return (
@@ -198,19 +234,27 @@ export const Sidebar: React.FC = () => {
           onClick={onClickHandler}
           sx={{
             borderRadius: 1.5,
-            pl: 9.5,
+            pl: 8.5,
             pr: 2,
-            py: 0.5,
-            color: 'text.secondary',
+            py: 0.45,
+            color: isActive ? 'primary.main' : 'text.secondary',
+            bgcolor: 'transparent',
             '&:hover': {
               bgcolor: 'action.hover',
-              color: 'text.primary',
+              color: isActive ? 'primary.main' : 'text.primary',
             },
           }}
         >
           <ListItemText
             primary={
-              <Typography sx={{ fontSize: '0.8125rem', fontWeight: 400, color: 'inherit' }}>
+              <Typography
+                sx={{
+                  fontSize: '0.78125rem',
+                  fontWeight: isActive ? 700 : 400,
+                  color: isActive ? 'primary.main' : 'text.secondary',
+                  letterSpacing: isActive ? '-0.005em' : 'normal',
+                }}
+              >
                 {label}
               </Typography>
             }
@@ -262,14 +306,15 @@ export const Sidebar: React.FC = () => {
             },
             '&::-webkit-scrollbar-track': {
               backgroundColor: 'transparent',
+              margin: '20px 0', // Shortens the scrollbar track nicely
             },
             '&::-webkit-scrollbar-thumb': {
               backgroundColor: (theme) =>
-                theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.12)' : 'rgba(145, 158, 171, 0.24)',
-              borderRadius: '4px',
+                theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.18)' : 'rgba(15, 23, 42, 0.2)',
+              borderRadius: '8px',
               '&:hover': {
                 backgroundColor: (theme) =>
-                  theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.24)' : 'rgba(145, 158, 171, 0.48)',
+                  theme.palette.mode === 'dark' ? 'rgba(255, 255, 255, 0.35)' : 'rgba(15, 23, 42, 0.4)',
               },
             },
           }}
@@ -429,7 +474,7 @@ export const Sidebar: React.FC = () => {
               {!isSidebarCollapsed && (
                 <Collapse in={networkingOpen} timeout="auto" unmountOnExit>
                   <List disablePadding>
-                    {renderSubItem('Network sites', () => setActiveModule('networking'))}
+                    {renderSubItem('Network sites', () => setActiveModule('networking'), false, false, activeModule === 'networking')}
 
                     {/* Routers Nested Submenu */}
                     {renderSubItem(
@@ -504,7 +549,7 @@ export const Sidebar: React.FC = () => {
                       </List>
                     </Collapse>
 
-                    {renderSubItem('Maps', () => setActiveModule('networking-maps'))}
+                    {renderSubItem('Maps', () => setActiveModule('networking-maps'), false, false, activeModule === 'networking-maps')}
                   </List>
                 </Collapse>
               )}
@@ -523,22 +568,23 @@ export const Sidebar: React.FC = () => {
               {!isSidebarCollapsed && (
                 <Collapse in={inventoryOpen} timeout="auto" unmountOnExit>
                   <List disablePadding>
-                    {renderSubItem('Dashboard', () => setActiveModule('inventory'))}
-                    {renderSubItem('Items', () => setActiveModule('inventory-items'))}
-                    {renderSubItem('Products', () => setActiveModule('inventory-products'))}
+                    {renderSubItem('Dashboard', () => setActiveModule('inventory'), false, false, activeModule === 'inventory')}
+                    {renderSubItem('Items', () => setActiveModule('inventory-items'), false, false, activeModule === 'inventory-items')}
+                    {renderSubItem('Products', () => setActiveModule('inventory-products'), false, false, activeModule === 'inventory-products')}
 
                     {/* Supply Nested Submenu */}
                     {renderSubItem(
                       'Supply',
                       () => setSupplyOpen(!supplyOpen),
                       true,
-                      supplyOpen
+                      supplyOpen,
+                      ['inventory-suppliers', 'inventory-vendors', 'inventory-supplier-invoices'].includes(activeModule)
                     )}
                     <Collapse in={supplyOpen} timeout="auto" unmountOnExit>
                       <List disablePadding>
-                        {renderNestedSubItem('Suppliers', () => setActiveModule('inventory-suppliers'))}
-                        {renderNestedSubItem('Vendors', () => setActiveModule('inventory-vendors'))}
-                        {renderNestedSubItem('Supplier invoices', () => setActiveModule('inventory-supplier-invoices'))}
+                        {renderNestedSubItem('Suppliers', () => setActiveModule('inventory-suppliers'), activeModule === 'inventory-suppliers')}
+                        {renderNestedSubItem('Vendors', () => setActiveModule('inventory-vendors'), activeModule === 'inventory-vendors')}
+                        {renderNestedSubItem('Supplier invoices', () => setActiveModule('inventory-supplier-invoices'), activeModule === 'inventory-supplier-invoices')}
                       </List>
                     </Collapse>
                   </List>
