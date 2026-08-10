@@ -183,7 +183,7 @@ export const InventorySupplierInvoicesView: React.FC = () => {
         <Table sx={{ minWidth: 900 }} size="small" aria-label="inventory supplier invoices table">
           <TableHead sx={{ bgcolor: 'action.hover' }}>
             <TableRow>
-              <TableCell sx={{ fontWeight: 700, fontSize: '0.8125rem', fontStyle: 'italic', width: 60 }}>
+              <TableCell sx={{ fontWeight: 700, fontSize: '0.8125rem', width: 60 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
                   <span>ID</span>
                   <SortIcon sx={{ fontSize: 16, color: 'text.disabled' }} />
