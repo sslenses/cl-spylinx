@@ -21,6 +21,7 @@ import { TariffPlansView } from './modules/company/TariffPlansView';
 import { AdministrationView } from './modules/system/AdministrationView';
 import { ConfigView } from './modules/system/ConfigView';
 import { SiteCustomizationView } from './modules/system/SiteCustomizationView';
+import { CompanyInformationView } from './modules/system/CompanyInformationView';
 import { QuickAddModal } from './components/modals/QuickAddModal';
 
 const ModuleSwitcher: React.FC = () => {
@@ -59,6 +60,8 @@ const ModuleSwitcher: React.FC = () => {
       return <AdministrationView />;
     case 'config':
       return <ConfigView />;
+    case 'company-information':
+      return <CompanyInformationView />;
     case 'site-customization':
       return <SiteCustomizationView />;
     default:
