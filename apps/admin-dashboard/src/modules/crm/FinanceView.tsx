@@ -61,7 +61,7 @@ export const FinanceView: React.FC = () => {
       </Box>
 
       {/* Finance Invoices Table Paper */}
-      <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 3 }}>
+      <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 2 }}>
         <Table sx={{ minWidth: 650 }} aria-label="finance invoices table">
           <TableHead sx={{ bgcolor: 'action.hover' }}>
             <TableRow>
