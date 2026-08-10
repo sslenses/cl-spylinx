@@ -15,10 +15,10 @@ import {
   Search as SearchIcon,
   HelpOutlined as HelpIcon,
   MenuBookOutlined as BookIcon,
-  NotificationsOutlined as BellIcon,
+  NotificationsNoneOutlined as BellIcon,
   KeyboardArrowDown as ChevronDownIcon,
-  DarkMode as DarkModeIcon,
-  LightMode as LightModeIcon,
+  DarkModeOutlined as DarkModeIcon,
+  LightModeOutlined as LightModeIcon,
   MenuOpen as MenuOpenIcon,
 } from '@mui/icons-material';
 import { useAppStore } from '../../lib/store';
@@ -33,15 +33,14 @@ export const TopBar: React.FC = () => {
       elevation={0}
       sx={{
         width: '100%',
-        backdropFilter: 'blur(8px)',
-        bgcolor: (theme) => (theme.palette.mode === 'dark' ? 'rgba(11, 19, 43, 0.85)' : 'rgba(244, 247, 252, 0.85)'),
+        bgcolor: isDarkMode ? '#0d121f' : '#ffffff',
         borderBottom: '1px solid',
         borderColor: 'divider',
         zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
-      <Toolbar sx={{ minHeight: 72, justifyContent: 'space-between', px: { xs: 2, sm: 3 } }}>
-        {/* Left Side: Brand Logo + Minimalist Toggle Button Aligned Rata Kiri with Body Content */}
+      <Toolbar sx={{ height: 60, minHeight: '60px !important', justifyContent: 'space-between', px: { xs: 2, sm: 2.5 } }}>
+        {/* Left Side: Brand Logo + Sidebar Toggle */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {/* Brand Logo Box matching sidebar width */}
           <Box
@@ -59,44 +58,51 @@ export const TopBar: React.FC = () => {
           >
             <Box
               sx={{
-                width: 40,
-                height: 40,
-                minWidth: 40,
+                width: 34,
+                height: 34,
+                minWidth: 34,
                 borderRadius: 1.5,
-                background: 'linear-gradient(135deg, #0066ff 0%, #00c6ff 100%)',
+                background: 'linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%)',
                 color: '#ffffff',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontWeight: 900,
-                fontSize: '1rem',
-                boxShadow: '0 4px 14px rgba(0, 102, 255, 0.4)',
+                fontWeight: 800,
+                fontSize: '0.9375rem',
+                boxShadow: '0 2px 8px rgba(37, 99, 235, 0.25)',
               }}
             >
               E
             </Box>
             {!isSidebarCollapsed && (
               <Box sx={{ overflow: 'hidden' }}>
-                <Typography variant="h6" sx={{ fontSize: '1.125rem', fontWeight: 800, lineHeight: 1.2 }}>
-                  EIMAS <Typography component="span" variant="caption" sx={{ color: 'primary.main', fontWeight: 800 }}>ELECTRIC</Typography>
+                <Typography variant="h6" sx={{ fontSize: '1rem', fontWeight: 700, lineHeight: 1.2, color: 'text.primary' }}>
+                  EIMAS <Typography component="span" sx={{ color: 'primary.main', fontWeight: 700, fontSize: '0.75rem', letterSpacing: 0.5 }}>ELECTRIC</Typography>
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
                   ISP Enterprise Suite
                 </Typography>
               </Box>
             )}
           </Box>
 
-          {/* Minimalist Toggle Sidebar Icon Button inside Header, aligned rata kiri with Body Content */}
-          <Tooltip title="Minimize / Expand Sidebar">
+          {/* Minimalist Toggle Sidebar Icon Button */}
+          <Tooltip title="Toggle Sidebar">
             <IconButton
               aria-label="Toggle Sidebar"
               onClick={toggleSidebar}
-              sx={{ color: 'text.primary', p: 1 }}
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                width: 34,
+                height: 34,
+                borderRadius: 1.5,
+                '&:hover': { bgcolor: 'action.hover', color: 'text.primary' },
+              }}
             >
               <MenuOpenIcon
                 sx={{
-                  fontSize: 22,
+                  fontSize: 20,
                   transform: isSidebarCollapsed ? 'rotate(180deg)' : 'none',
                   transition: 'transform 0.2s ease-in-out',
                 }}
@@ -105,23 +111,25 @@ export const TopBar: React.FC = () => {
           </Tooltip>
         </Box>
 
-        {/* Right Side: Header Content Matching Exact Screenshot */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.2 }}>
+        {/* Right Side: Action Button + Unified Icon Controls + User Profile */}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.8 }}>
           {/* Deployment guide Button */}
           <Button
             variant="contained"
             disableElevation
+            size="small"
             sx={{
-              bgcolor: '#2f80ed',
+              bgcolor: 'primary.main',
               color: '#ffffff',
               fontWeight: 600,
-              fontSize: '0.875rem',
+              fontSize: '0.8125rem',
               px: 2,
-              py: 0.8,
-              borderRadius: 1,
+              height: 32,
+              borderRadius: 1.5,
               textTransform: 'none',
+              mr: 0.5,
               '&:hover': {
-                bgcolor: '#1d6cd3',
+                bgcolor: 'primary.dark',
               },
             }}
           >
@@ -130,57 +138,120 @@ export const TopBar: React.FC = () => {
 
           {/* Plus (+) Quick Add Icon Button */}
           <Tooltip title="Quick Add">
-            <IconButton aria-label="Quick Add" onClick={() => setQuickAddOpen(true)} sx={{ color: 'text.primary', p: 1 }}>
-              <AddIcon sx={{ fontSize: 24 }} />
+            <IconButton
+              aria-label="Quick Add"
+              onClick={() => setQuickAddOpen(true)}
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                width: 34,
+                height: 34,
+                borderRadius: 1.5,
+                '&:hover': { bgcolor: 'action.hover', color: 'text.primary' },
+              }}
+            >
+              <AddIcon sx={{ fontSize: 20 }} />
             </IconButton>
           </Tooltip>
 
           {/* Search Icon Button */}
           <Tooltip title="Search">
-            <IconButton aria-label="Search" sx={{ color: 'text.primary', p: 1 }}>
-              <SearchIcon sx={{ fontSize: 22 }} />
+            <IconButton
+              aria-label="Search"
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                width: 34,
+                height: 34,
+                borderRadius: 1.5,
+                '&:hover': { bgcolor: 'action.hover', color: 'text.primary' },
+              }}
+            >
+              <SearchIcon sx={{ fontSize: 20 }} />
             </IconButton>
           </Tooltip>
 
           {/* Help Circle (?) Icon Button */}
           <Tooltip title="Help & Support">
-            <IconButton aria-label="Help & Support" sx={{ color: 'text.primary', p: 1 }}>
-              <HelpIcon sx={{ fontSize: 22 }} />
+            <IconButton
+              aria-label="Help & Support"
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                width: 34,
+                height: 34,
+                borderRadius: 1.5,
+                '&:hover': { bgcolor: 'action.hover', color: 'text.primary' },
+              }}
+            >
+              <HelpIcon sx={{ fontSize: 20 }} />
             </IconButton>
           </Tooltip>
 
           {/* Book (i) Icon Button */}
           <Tooltip title="Documentation">
-            <IconButton aria-label="Documentation" sx={{ color: 'text.primary', p: 1 }}>
-              <BookIcon sx={{ fontSize: 22 }} />
+            <IconButton
+              aria-label="Documentation"
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                width: 34,
+                height: 34,
+                borderRadius: 1.5,
+                '&:hover': { bgcolor: 'action.hover', color: 'text.primary' },
+              }}
+            >
+              <BookIcon sx={{ fontSize: 20 }} />
             </IconButton>
           </Tooltip>
 
-          {/* Bell Icon Button with Badge 6 */}
+          {/* Bell Icon Button with Badge */}
           <Tooltip title="Notifications">
-            <IconButton aria-label="Notifications" sx={{ color: 'text.primary', p: 1 }}>
+            <IconButton
+              aria-label="Notifications"
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                width: 34,
+                height: 34,
+                borderRadius: 1.5,
+                '&:hover': { bgcolor: 'action.hover', color: 'text.primary' },
+              }}
+            >
               <Badge
                 badgeContent={6}
                 sx={{
                   '& .MuiBadge-badge': {
-                    bgcolor: '#2f80ed',
+                    bgcolor: 'primary.main',
                     color: '#ffffff',
                     fontWeight: 700,
-                    fontSize: '0.7rem',
-                    minWidth: 18,
-                    height: 18,
+                    fontSize: '0.65rem',
+                    minWidth: 16,
+                    height: 16,
+                    px: 0.5,
                   },
                 }}
               >
-                <BellIcon sx={{ fontSize: 24 }} />
+                <BellIcon sx={{ fontSize: 20 }} />
               </Badge>
             </IconButton>
           </Tooltip>
 
           {/* Dark Mode Toggle */}
           <Tooltip title="Toggle Theme">
-            <IconButton aria-label="Toggle Theme" onClick={toggleDarkMode} sx={{ color: 'text.primary', p: 1 }}>
-              {isDarkMode ? <LightModeIcon sx={{ fontSize: 20, color: 'warning.main' }} /> : <DarkModeIcon sx={{ fontSize: 20 }} />}
+            <IconButton
+              aria-label="Toggle Theme"
+              onClick={toggleDarkMode}
+              size="small"
+              sx={{
+                color: 'text.secondary',
+                width: 34,
+                height: 34,
+                borderRadius: 1.5,
+                '&:hover': { bgcolor: 'action.hover', color: 'text.primary' },
+              }}
+            >
+              {isDarkMode ? <LightModeIcon sx={{ fontSize: 19, color: 'warning.main' }} /> : <DarkModeIcon sx={{ fontSize: 19 }} />}
             </IconButton>
           </Tooltip>
 
@@ -189,11 +260,13 @@ export const TopBar: React.FC = () => {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              gap: 1.2,
-              ml: 1,
+              gap: 1,
+              ml: 0.5,
               cursor: 'pointer',
-              p: 0.5,
-              borderRadius: 1,
+              px: 1,
+              py: 0.5,
+              borderRadius: 1.5,
+              transition: 'background-color 150ms ease',
               '&:hover': {
                 bgcolor: 'action.hover',
               },
@@ -201,20 +274,20 @@ export const TopBar: React.FC = () => {
           >
             <Avatar
               sx={{
-                width: 34,
-                height: 34,
+                width: 30,
+                height: 30,
                 bgcolor: '#c2185b',
                 color: '#ffffff',
-                fontWeight: 700,
-                fontSize: '0.85rem',
+                fontWeight: 600,
+                fontSize: '0.78125rem',
               }}
             >
               MA
             </Avatar>
-            <Typography variant="body2" sx={{ fontWeight: 600, color: 'text.primary' }}>
+            <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.8125rem', color: 'text.primary' }}>
               Main Admin
             </Typography>
-            <ChevronDownIcon sx={{ fontSize: 18, color: 'text.secondary' }} />
+            <ChevronDownIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
           </Box>
         </Box>
       </Toolbar>
