@@ -62,7 +62,7 @@ export const CustomersView: React.FC = () => {
       </Box>
 
       {/* Customers Table Paper */}
-      <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 3 }}>
+      <Paper sx={{ width: '100%', overflow: 'hidden', borderRadius: 2 }}>
         <Table sx={{ minWidth: 650 }} aria-label="subscribers table">
           <TableHead sx={{ bgcolor: 'action.hover' }}>
             <TableRow>
