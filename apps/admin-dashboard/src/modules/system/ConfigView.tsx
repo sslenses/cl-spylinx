@@ -490,6 +490,8 @@ export const ConfigView: React.FC = () => {
                         onClick={() => {
                           if (item.name === 'Site customization') {
                             setActiveModule('site-customization');
+                          } else if (item.name === 'Company information') {
+                            setActiveModule('company-information');
                           }
                         }}
                         sx={{
